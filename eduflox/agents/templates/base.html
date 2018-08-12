@@ -25,38 +25,26 @@
       </div>
       <div id="navbarMenu" class="navbar-menu">
         <div class="navbar-end">
-          <a class="navbar-item is-active">
-            Home
-          </a>
-          <a class="navbar-item">
-            Agents
-          </a>
-          <a class="navbar-item">
-            SUBEB
-          </a>
-          {% if request.user.authenticated %}
+          {% if request.resolver_match.url_name == 'home' %}
+          <a class="navbar-item is-active">Home</a>
+          {% else %}
+          <a class="navbar-item" href="{% url 'home' %}">Home</a>
+          {% endif %}
+          <a class="navbar-item" href="{% url 'agents.dashboard' %}">Agents</a>
+          <a class="navbar-item" href="{#% url 'subeb.dashboard' %#}">SUBEB</a>
+          {% if user.authenticated %}
           <div class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-link">
-              Account
-            </a>
+            <a class="navbar-link">Account</a>
             <div class="navbar-dropdown">
-              <a class="navbar-item">
-                Dashboard
-              </a>
-              <a class="navbar-item">
-                Profile
-              </a>
-              <a class="navbar-item">
-                Settings
-              </a>
+              <a class="navbar-item">Dashboard</a>
+              <a class="navbar-item">Profile</a>
+              <a class="navbar-item">Settings</a>
               <hr class="navbar-divider">
-              <div class="navbar-item">
-                Logout
-              </div>
+              <a class="navbar-item" href="{% url 'logout' %}">Logout</a>
             </div>
           </div>
           {% else %}
-          <a class="navbar-item">
+          <a class="navbar-item" href="{% url 'login' %}">
             Sign In
           </a>
           {% endif %}

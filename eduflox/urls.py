@@ -14,11 +14,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path, include
 import eduflox.agents.views
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    # path("admin/", admin.site.urls),
     path("agents/", include("eduflox.agents.urls")),
-    path("", eduflox.agents.views.index),
+    path("signin", LoginView.as_view(), name="login"),
+    path("signout", LogoutView.as_view(next_page="home"), name="logout"),
+    path("", eduflox.agents.views.home, name="home"),
 ]

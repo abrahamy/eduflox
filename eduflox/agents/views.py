@@ -6,8 +6,12 @@ from .forms import InvitationForm, RegistrationForm
 from .models import Invitation
 
 
-def index(request):
-    return render(request, "agents/base.html")
+def home(request):
+    return render(request, "agents/home.html")
+
+
+def dashboard(request):
+    return render(request, "agents/dashboard.html")
 
 
 @login_required
