@@ -6,6 +6,10 @@ from .forms import InvitationForm, RegistrationForm
 from .models import Invitation
 
 
+def index(request):
+    return render(request, "agents/base.html")
+
+
 @login_required
 def invite_agent(request):
     """Invite an agent to the portal"""

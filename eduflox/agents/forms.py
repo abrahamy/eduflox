@@ -4,7 +4,7 @@ from django.template.loader import render_to_string
 
 from .models import Agent, Invitation, User
 
-rendered = render_to_string("my_template.html", {"foo": "bar"})
+rendered = render_to_string("emails/invite.html", {"foo": "bar"})
 
 
 class InvitationForm(forms.Form):
@@ -24,7 +24,7 @@ class InvitationForm(forms.Form):
 
 class RegistrationForm(forms.Form):
     first_name = forms.CharField(label="First Name")
-    middle_name = forms.CharField(label="Middle Name", blank=True)
+    middle_name = forms.CharField(label="Middle Name", required=False)
     last_name = forms.CharField(label="Last Name")
     mobile_no = forms.RegexField(r"^\d{11}$")
     email = forms.EmailField(label="Email")

@@ -13,14 +13,16 @@ class Agent(models.Model):
         regex=r"^\d{11}$", message="Invalid mobile number."
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    first_name = models.CharField("First Name")
-    middle_name = models.CharField("Middle Name", null=True)
-    last_name = models.CharField("Last Name")
-    mobile_no = models.CharField("Mobile No", validators=[MOBILE_NUMBER_VALIDATOR])
+    first_name = models.CharField("First Name", max_length=25)
+    middle_name = models.CharField("Middle Name", max_length=25, null=True)
+    last_name = models.CharField("Last Name", max_length=25)
+    mobile_no = models.CharField(
+        "Mobile No", max_length=11, validators=[MOBILE_NUMBER_VALIDATOR]
+    )
     email = models.EmailField("Email")
-    address = models.CharField("Street")
-    city = models.CharField("City")
-    state = models.CharField("State")
+    address = models.CharField("Street", max_length=200)
+    city = models.CharField("City", max_length=25)
+    state = models.CharField("State", max_length=25)
 
 
 def create_token():
@@ -29,9 +31,9 @@ def create_token():
 
 
 class Invitation(models.Model):
-    inviter = models.ForeignKey(User, on_delete=models.SET_NULL)
+    inviter = models.ForeignKey(User, on_delete=models.CASCADE)
     invitee_email = models.EmailField("Invitee Email", unique=True)
-    token = models.CharField("Token", unique=True, default=create_token)
+    token = models.CharField("Token", max_length=75, unique=True, default=create_token)
     invitation_date = models.DateTimeField(auto_now_add=True)
     accepted_date = models.DateTimeField(null=True)
 
@@ -50,10 +52,10 @@ class Invitation(models.Model):
 
 
 class School(models.Model):
-    name = models.CharField("School")
-    location = models.CharField("Location")
-    district = models.CharField("District")
-    code = models.CharField("School Code", unique=True)
+    name = models.CharField("School", max_length=150)
+    location = models.CharField("Location", max_length=25)
+    district = models.CharField("District", max_length=25)
+    code = models.CharField("School Code", max_length=10, unique=True)
 
 
 class ServiceRequest(models.Model):
@@ -64,4 +66,4 @@ class ServiceRequest(models.Model):
 class Invoice(models.Model):
     request_code = models.ForeignKey(ServiceRequest, on_delete=models.CASCADE)
     cpe = models.CharField("Add CPE", max_length=75)
-    cpe_amount = models.DecimalField()
+    cpe_amount = models.DecimalField(max_digits=10, decimal_places=2)
