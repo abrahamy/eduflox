@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html>
+{% load static %}
 
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Eduflox Portal</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
-  <script defer src="https://use.fontawesome.com/releases/v5.1.0/js/all.js"></script>
+  <link rel="stylesheet" href="{% static '/vendor/MaterialDesign/css/materialdesignicons.css' %}">
+  <link rel="stylesheet" href="{% static '/vendor/buefy/buefy.min.css' %}">
+  <link rel="stylesheet" href="{% static 'agents/main.css' %}">
 </head>
 
 <body>
@@ -14,7 +16,7 @@
   <nav class="navbar">
     <div class="container">
       <div class="navbar-brand">
-        <a class="navbar-item" href="/">
+        <a class="navbar-item is--brand" href="{% url 'home' %}">
           Eduflox Portal
         </a>
         <span class="navbar-burger burger" data-target="navbarMenu">
@@ -29,12 +31,15 @@
           <a class="navbar-item is-active">Home</a>
           {% else %}
           <a class="navbar-item" href="{% url 'home' %}">Home</a>
-          {% endif %}
+          {% endif %} {% if request.resolver_match.url_name == 'agents.dashboard' %}
+          <a class="navbar-item is-active">Agents</a>
+          {% else %}
           <a class="navbar-item" href="{% url 'agents.dashboard' %}">Agents</a>
+          {% endif %}
           <a class="navbar-item" href="{#% url 'subeb.dashboard' %#}">SUBEB</a>
-          {% if user.authenticated %}
+          {% if not user.authenticated %}
           <div class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-link">Account</a>
+            <a class="navbar-link navbar-item">Account</a>
             <div class="navbar-dropdown">
               <a class="navbar-item">Dashboard</a>
               <a class="navbar-item">Profile</a>
@@ -53,11 +58,7 @@
     </div>
   </nav>
   <!-- END NAV -->
-  <section class="section">
-    <div class="container">
-      {% block main %}{% endblock %}
-    </div>
-  </section>
+  {% block content %} {% endblock %}
 </body>
 
 </html>
