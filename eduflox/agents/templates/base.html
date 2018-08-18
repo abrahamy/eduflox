@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Eduflox Portal</title>
   <link rel="stylesheet" href="{% static '/vendor/MaterialDesign/css/materialdesignicons.css' %}">
-  <link rel="stylesheet" href="{% static '/vendor/buefy/buefy.min.css' %}">
+  <link rel="stylesheet" href="{% static '/vendor/buefy/buefy.css' %}">
   <link rel="stylesheet" href="{% static 'agents/main.css' %}">
 </head>
 
@@ -31,7 +31,7 @@
           <a class="navbar-item is-active">Home</a>
           {% else %}
           <a class="navbar-item" href="{% url 'home' %}">Home</a>
-          {% endif %} {% if request.resolver_match.url_name == 'agents.dashboard' %}
+          {% endif %} {% if request.resolver_match.url_name in 'agents.dashboard agents.schools agents.services' %}
           <a class="navbar-item is-active">Agents</a>
           {% else %}
           <a class="navbar-item" href="{% url 'agents.dashboard' %}">Agents</a>

@@ -14,6 +14,14 @@ def dashboard(request):
     return render(request, "agents/dashboard.html")
 
 
+def schools(request):
+    return render(request, "agents/schools.html")
+
+
+def services(request):
+    return render(request, "agents/services.html")
+
+
 @login_required
 def invite_agent(request):
     """Invite an agent to the portal"""

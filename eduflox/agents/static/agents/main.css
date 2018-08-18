@@ -61,11 +61,12 @@
 }
 .aside{
     background:#2e363f;
-    padding:2em .2em 0 1em
+    padding:2em .2em 0 1em;
+    min-height: 100vh !important;
 }
 
 .aside a{
-    color:#afb8c3
+    color:#afb8c3;
 }
 
 .aside .menu-list li{
@@ -73,7 +74,8 @@
 }
 
 .main{
-    padding:2em 1em 0
+    padding:2em 1em 0;
+    min-height: 100vh !important;
 }
 
 .menu-label{

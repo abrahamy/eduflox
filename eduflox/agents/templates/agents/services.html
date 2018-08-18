@@ -1,0 +1,29 @@
+{% extends 'agents/base.html' %}
+
+<!-- Breadcrumbs -->
+{% block breadcrumbs %}
+
+<nav class="breadcrumb is-small" aria-label="breadcrumbs">
+  <ul>
+    <li>
+      <a href="{% url 'home' %}">Home</a>
+    </li>
+    <li>
+      <a href="{% url 'agents.dashboard' %}">Dashboard</a>
+    </li>
+    <li class="is-active">
+      <a href="#" aria-current="page">Services</a>
+    </li>
+  </ul>
+</nav>
+
+{% endblock %}
+
+<!-- Leader -->
+{% block leader %}
+<i class="mdi mdi-room-service"></i> Services
+<!---->
+{% endblock %}
+
+<!-- Primary content -->
+{% block primary %}Hello Services!{% endblock %}
