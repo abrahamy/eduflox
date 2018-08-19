@@ -9,6 +9,8 @@
   <link rel="stylesheet" href="{% static '/vendor/MaterialDesign/css/materialdesignicons.css' %}">
   <link rel="stylesheet" href="{% static '/vendor/buefy/buefy.css' %}">
   <link rel="stylesheet" href="{% static 'agents/main.css' %}">
+  <!-- Stylesheets -->
+  {% block css %}{% endblock %}
 </head>
 
 <body>
@@ -58,7 +60,10 @@
     </div>
   </nav>
   <!-- END NAV -->
-  {% block content %} {% endblock %}
+  {% block content %}{% endblock %}
+
+  <!-- Scripts -->
+  {% block js %}{% endblock %}
 </body>
 
 </html>

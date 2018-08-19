@@ -52,10 +52,14 @@ class Invitation(models.Model):
 
 
 class School(models.Model):
+    STATUSES = (("pending", "Pending"), ("approved", "Approved"))
     name = models.CharField("School", max_length=150)
     location = models.CharField("Location", max_length=25)
     district = models.CharField("District", max_length=25)
     code = models.CharField("School Code", max_length=10, unique=True)
+    status = models.CharField("Status", max_length=20, choices=STATUSES)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 
 class ServiceRequest(models.Model):

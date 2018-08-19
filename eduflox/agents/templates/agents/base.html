@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% load static %}
 
 <!-- Content Block -->
 {% block content %}
@@ -89,4 +89,16 @@
 </div>
 
 
+{% endblock %}
+
+<!-- Scripts -->
+{% block js %}
+<script src="{% static '/vendor/vue/vue.js' %}"></script>
+<script src="{% static '/vendor/buefy/buefy.js' %}"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    Vue.use(Buefy.default)
+  })
+</script>
+<!---->
 {% endblock %}

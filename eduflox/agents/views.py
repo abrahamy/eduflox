@@ -3,7 +3,7 @@ from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import InvitationForm, RegistrationForm
-from .models import Invitation
+from .models import Invitation, School
 
 
 def home(request):
@@ -15,7 +15,8 @@ def dashboard(request):
 
 
 def schools(request):
-    return render(request, "agents/schools.html")
+    schools = School.objects.all()
+    return render(request, "agents/schools.html", context=locals())
 
 
 def services(request):
