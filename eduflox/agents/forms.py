@@ -2,7 +2,7 @@ from django import forms
 from django.conf import settings
 from django.template.loader import render_to_string
 
-from .models import Agent, Invitation, User
+from eduflox.api.models import Agent, Invitation, User
 
 rendered = render_to_string("emails/invite.html", {"foo": "bar"})
 

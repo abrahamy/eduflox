@@ -5,6 +5,11 @@ name = "pypi"
 
 [packages]
 django = "*"
+djangorestframework = "*"
+markdown = "*"
+coreapi = "*"
+django-filter = "*"
+django-guardian = "*"
 
 [dev-packages]
 pylint = "*"
@@ -18,3 +23,4 @@ allow_prereleases = true
 
 [scripts]
 start = "python manage.py runserver"
+manage = "python manage.py"

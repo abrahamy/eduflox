@@ -3,7 +3,7 @@ from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import InvitationForm, RegistrationForm
-from .models import Invitation, School
+from eduflox.api.models import Invitation, School
 
 
 def home(request):
