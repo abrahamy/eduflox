@@ -75,7 +75,7 @@ class School(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 
-class ServiceRequest(models.Model):
+class Service(models.Model):
     school = models.ForeignKey(School, on_delete=models.CASCADE)
     service_description = models.TextField()
     requested_by = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -84,7 +84,7 @@ class ServiceRequest(models.Model):
 
 
 class Invoice(models.Model):
-    request_code = models.ForeignKey(ServiceRequest, on_delete=models.CASCADE)
+    request_code = models.ForeignKey(Service, on_delete=models.CASCADE)
     cpe = models.CharField("Add CPE", max_length=75)
     cpe_amount = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
