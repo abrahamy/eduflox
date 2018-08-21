@@ -15,13 +15,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.contrib.auth.views import LoginView, LogoutView
-from django.urls import path, include
-import eduflox.agents.views
+from django.urls import include, path
+
+from eduflox.agents import views as agents
 
 urlpatterns = [
     # path("admin/", admin.site.urls),
+    path("api/", include("eduflox.api.urls")),
     path("agents/", include("eduflox.agents.urls")),
     path("signin", LoginView.as_view(), name="login"),
     path("signout", LogoutView.as_view(next_page="home"), name="logout"),
-    path("", eduflox.agents.views.home, name="home"),
+    path("", agents.home, name="home"),
 ]
