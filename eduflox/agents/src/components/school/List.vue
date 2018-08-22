@@ -1,8 +1,16 @@
-document.addEventListener("DOMContentLoaded", () => {
-    new Vue({
-        el: '#app',
-        data: {
-            schools: [],
+<template>
+  <div class="columns is-multiline">
+    <div id="app" class="column">
+      <b-table :data="schools" :columns="columns" :selected.sync="selected" focusable></b-table>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+    data() {
+        return {
+          schools: [],
             columns: [
                 {
                     field: 'name',
@@ -37,13 +45,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 },
             ],
             selected: null,
-            loading: false,
-        },
-        mounted: function () {
-
-        },
-        methods: {
-
+            loading: false
         }
-    })
-})
+    }
+}
+</script>

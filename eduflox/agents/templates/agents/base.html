@@ -1,104 +1,67 @@
-{% extends 'base.html' %} {% load static %}
+<!DOCTYPE html>
+<html>
+{% load static %}
 
-<!-- Content Block -->
-{% block content %}
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Eduflox Portal</title>
+  <link rel="stylesheet" href="{% static 'agents/css/app.css' %}">
+  <!-- Stylesheets -->
+  {% block css %}{% endblock %}
+</head>
 
-<div class="wrapper">
-  <div class="columns">
-
-    <!-- Sidebar -->
-    <aside class="column is-2 aside">
-      <nav class="menu">
-        <p class="menu-label">
-          General
-        </p>
-        <ul class="menu-list">
-          <li>
-            {% if request.resolver_match.url_name == 'agents.dashboard' %}
-            <a class="is-active" href="#">
-              <span class="icon is-small">
-                <i class="mdi mdi-view-dashboard"></i>
-              </span> Dashboard</a>
-            {% else %}
-            <a href="{% url 'agents.dashboard' %}">
-              <span class="icon is-small">
-                <i class="mdi mdi-view-dashboard"></i>
-              </span> Dashboard</a>
-            {% endif %}
-          </li>
-        </ul>
-        <p class="menu-label">
-          Administration
-        </p>
-        <ul class="menu-list">
-          <li>
-            {% if request.resolver_match.url_name == 'agents.schools' %}
-            <a class="is-active" href="#">
-              <span class="icon is-small">
-                <i class="mdi mdi-school"></i>
-              </span> Schools</a>
-            {% else %}
-            <a href="{% url 'agents.schools' %}">
-              <span class="icon is-small">
-                <i class="mdi mdi-school"></i>
-              </span> Schools</a>
-            {% endif %}
-          </li>
-          <li>
-            {% if request.resolver_match.url_name == 'agents.services' %}
-            <a class="is-active" href="#">
-              <span class="icon is-small">
-                <i class="mdi mdi-room-service"></i>
-              </span> Services</a>
-            {% else %}
-            <a href="{% url 'agents.services' %}">
-              <span class="icon is-small">
-                <i class="mdi mdi-room-service"></i>
-              </span> Services</a>
-            {% endif %}
-          </li>
-        </ul>
-      </nav>
-    </aside>
-    <!-- Sidebar end -->
-
-    <main class="column main">
-      {% block breadcrumbs %}{% endblock %}
-
-      <div class="level">
-        <div class="level-left">
-          <div class="level-item">
-            <div class="title has-text-primary">
-              {% block leader %}{% endblock %}
+<body>
+  <!-- START NAV -->
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar-brand">
+        <a class="navbar-item is--brand" href="{% url 'home' %}">
+          Eduflox Portal
+        </a>
+        <span class="navbar-burger burger" data-target="navbarMenu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+      </div>
+      <div id="navbarMenu" class="navbar-menu">
+        <div class="navbar-end">
+          {% if request.resolver_match.url_name == 'home' %}
+          <a class="navbar-item is-active">Home</a>
+          {% else %}
+          <a class="navbar-item" href="{% url 'home' %}">Home</a>
+          {% endif %} {% if request.resolver_match.url_name in 'agents.dashboard agents.schools agents.services' %}
+          <a class="navbar-item is-active">Agents</a>
+          {% else %}
+          <a class="navbar-item" href="{% url 'agents.dashboard' %}">Agents</a>
+          {% endif %}
+          <a class="navbar-item" href="{#% url 'subeb.dashboard' %#}">SUBEB</a>
+          {% if not user.authenticated %}
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link navbar-item">Account</a>
+            <div class="navbar-dropdown">
+              <a class="navbar-item" href="{% url 'agents.dashboard' %}">Dashboard</a>
+              <a class="navbar-item">Profile</a>
+              <a class="navbar-item">Settings</a>
+              <hr class="navbar-divider">
+              <a class="navbar-item" href="{% url 'logout' %}">Logout</a>
             </div>
           </div>
-        </div>
-        <div class="level-right">
-          <div class="level-item">
-            <button type="button" class="button is-small">
-              {% now "F j, Y" %}
-            </button>
-          </div>
+          {% else %}
+          <a class="navbar-item" href="{% url 'login' %}">
+            Sign In
+          </a>
+          {% endif %}
         </div>
       </div>
+    </div>
+  </nav>
+  <!-- END NAV -->
+  {% block content %}{% endblock %}
 
-      {% block primary %}{% endblock %}
+  <!-- Scripts -->
+  {% block js %}{% endblock %}
+</body>
 
-    </main>
-  </div>
-</div>
-
-
-{% endblock %}
-
-<!-- Scripts -->
-{% block js %}
-<script src="{% static '/vendor/vue/vue.js' %}"></script>
-<script src="{% static '/vendor/buefy/buefy.js' %}"></script>
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    Vue.use(Buefy.default)
-  })
-</script>
-<!---->
-{% endblock %}
+</html>
