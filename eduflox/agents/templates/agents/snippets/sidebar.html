@@ -1,0 +1,55 @@
+<!-- Sidebar -->
+<aside class="column is-2 aside">
+  <nav class="menu">
+    <p class="menu-label">
+      General
+    </p>
+    <ul class="menu-list">
+      <li>
+        {% if request.resolver_match.url_name == 'agents.dashboard' %}
+        <a class="is-active" href="#">
+          <span class="icon is-small">
+            <i class="mdi mdi-view-dashboard"></i>
+          </span> Dashboard</a>
+        {% else %}
+        <a href="{% url 'agents.dashboard' %}">
+          <span class="icon is-small">
+            <i class="mdi mdi-view-dashboard"></i>
+          </span> Dashboard</a>
+        {% endif %}
+      </li>
+    </ul>
+    <p class="menu-label">
+      Administration
+    </p>
+    <ul class="menu-list">
+      <li>
+        {% if request.resolver_match.url_name == 'agents.schools' %}
+        <a class="is-active" href="#">
+          <span class="icon is-small">
+            <i class="mdi mdi-school"></i>
+          </span> Schools</a>
+        {% else %}
+        <a href="{% url 'agents.schools' %}">
+          <span class="icon is-small">
+            <i class="mdi mdi-school"></i>
+          </span> Schools</a>
+        {% endif %}
+      </li>
+      <li>
+        {% if request.resolver_match.url_name == 'agents.services' %}
+        <a class="is-active" href="#">
+          <span class="icon is-small">
+            <i class="mdi mdi-room-service"></i>
+          </span> Services</a>
+        {% else %}
+        <a href="{% url 'agents.services' %}">
+          <span class="icon is-small">
+            <i class="mdi mdi-room-service"></i>
+          </span> Services</a>
+        {% endif %}
+      </li>
+    </ul>
+  </nav>
+</aside>
+<!-- Sidebar end -->

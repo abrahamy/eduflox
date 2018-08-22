@@ -1,4 +1,4 @@
-{% extends 'agents/columns.html' %} {% load static %}
+{% extends 'agents/base.html' %} {% load static %}
 
 <!-- Breadcrumbs -->
 {% block breadcrumbs %}
@@ -27,13 +27,11 @@
 
 <!-- Primary content -->
 {% block primary %}
-<div class="columns is-multiline">
-  <div id="app" class="column">
-    <b-table :data="schools" :columns="columns" :selected.sync="selected" focusable></b-table>
+<v-app>
+  <div class="columns is-multiline">
+    <div class="column">
+      <v-school/>
+    </div>
   </div>
-</div>
+</v-app>
 {% endblock %}
-
-<!-- Scripts -->
-{% block js %} {{ block.super }}
-<script src="{% static '/agents/js/schools.js' %}"></script> {% endblock %}

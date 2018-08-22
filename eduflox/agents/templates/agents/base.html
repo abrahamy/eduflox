@@ -6,6 +6,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Eduflox Portal</title>
+  <link rel="stylesheet" href="{% static 'agents/css/chunk-vendors.css' %}">
   <link rel="stylesheet" href="{% static 'agents/css/app.css' %}">
   <!-- Stylesheets -->
   {% block css %}{% endblock %}
@@ -58,10 +59,56 @@
     </div>
   </nav>
   <!-- END NAV -->
-  {% block content %}{% endblock %}
+
+  <!-- Container -->
+  <div class="wrapper">
+    <div class="columns">
+
+      <!-- Content -->
+      {% if request.resolver_match.url_name not in 'home signin signout' %}
+      <!-- include the sidebar -->
+      {% include 'agents/snippets/sidebar.html' %}
+      <main class="column main">
+        {% block breadcrumbs %}{% endblock %}
+
+        <div class="level">
+          <div class="level-left">
+            <div class="level-item">
+              <div class="title has-text-primary">
+                {% block leader %}{% endblock %}
+              </div>
+            </div>
+          </div>
+          <div class="level-right">
+            <div class="level-item">
+              <button type="button" class="button is-small">
+                {% now "F j, Y" %}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div id="app">
+          {% block primary %}{% endblock %}
+        </div>
+
+      </main>
+      {% else %}
+      <div id="app">{% block content %}{% endblock %}</div>
+      {% endif %}
+      <!-- Content end -->
+
+
+    </div>
+  </div>
+  <!-- Container END -->
 
   <!-- Scripts -->
-  {% block js %}{% endblock %}
+  {% block js %}
+  <script src="{% static '/agents/js/chunk-vendors.js' %}"></script>
+  <script src="{% static '/agents/js/app.js' %}"></script>
+  <!-- agents/base.html ends here -->
+  {% endblock %}
 </body>
 
 </html>
