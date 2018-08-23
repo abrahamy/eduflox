@@ -8,21 +8,26 @@
 
 <script>
 export default {
-  name: 'VSchool',
-  data () {
+  name: "VSchool",
+  data() {
     return {
       schools: [],
       columns: [
-        { field: 'name', label: 'Name', sortable: true },
-        { field: 'code', label: 'Code', sortable: true },
-        { field: 'location', label: 'Location', sortable: true },
-        { field: 'district', label: 'District', sortable: true },
-        { field: 'status', label: 'Status', sortable: true },
-        { field: 'created_at', label: 'Date Created', sortable: true, centered: true },
+        { field: "name", label: "Name", sortable: true },
+        { field: "code", label: "Code", sortable: true },
+        { field: "location", label: "Location", sortable: true },
+        { field: "district", label: "District", sortable: true },
+        { field: "status", label: "Status", sortable: true },
+        {
+          field: "created_at",
+          label: "Date Created",
+          sortable: true,
+          centered: true
+        }
       ],
       selected: null,
       loading: false
-    }
+    };
   }
-}
+};
 </script>

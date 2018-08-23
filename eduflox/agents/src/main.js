@@ -1,12 +1,12 @@
-import Vue from 'vue'
-import components from './components'
-import store from './store'
+import Vue from "vue";
+import components from "./components";
+import store from "./store";
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
 /* eslint no-new: off */
 new Vue({
-  el: '#app',
+  el: "#app",
   store,
   components
-})
+});

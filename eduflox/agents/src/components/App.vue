@@ -6,6 +6,6 @@
 
 <script>
 export default {
-  name: 'VApp'
-}
+  name: "VApp"
+};
 </script>
