@@ -1,7 +1,7 @@
 module.exports = {
-  baseUrl: './',
-  outputDir: 'static/agents',
+  baseUrl: "./",
+  outputDir: "static/agents",
   filenameHashing: false,
-  runtimeCompiler: false,
+  runtimeCompiler: true,
   productionSourceMap: false
-}
+};
