@@ -38,7 +38,7 @@
           <a class="navbar-item" href="{% url 'agents.dashboard' %}">Agents</a>
           {% endif %}
           <a class="navbar-item" href="{#% url 'subeb.dashboard' %#}">SUBEB</a>
-          {% if not user.authenticated %}
+          {% if user.is_authenticated %}
           <div class="navbar-item has-dropdown is-hoverable">
             <a class="navbar-link navbar-item">Account</a>
             <div class="navbar-dropdown">
@@ -60,12 +60,11 @@
   </nav>
   <!-- END NAV -->
 
+  {% if not request.resolver_match.url_name in 'home login logout' %}
   <!-- Container -->
   <div class="wrapper">
     <div class="columns">
 
-      <!-- Content -->
-      {% if request.resolver_match.url_name not in 'home signin signout' %}
       <!-- include the sidebar -->
       {% include 'agents/snippets/sidebar.html' %}
       <main class="column main">
@@ -93,14 +92,17 @@
         </div>
 
       </main>
-      {% else %}
-      <div id="app">{% block content %}{% endblock %}</div>
-      {% endif %}
       <!-- Content end -->
 
 
     </div>
   </div>
+
+  {% else %}
+  <section class="container">
+    <div id="app">{% block content %}{% endblock %}</div>
+  </section>
+  {% endif %}
   <!-- Container END -->
 
   <!-- Scripts -->

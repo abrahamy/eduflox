@@ -2,23 +2,27 @@ from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
 
-from .forms import InvitationForm, RegistrationForm
 from eduflox.api.models import Invitation, School
+
+from .forms import InvitationForm, RegistrationForm
 
 
 def home(request):
     return render(request, "agents/home.html")
 
 
+@login_required
 def dashboard(request):
     return render(request, "agents/dashboard.html")
 
 
+@login_required
 def schools(request):
     schools = School.objects.all()
     return render(request, "agents/schools.html", context=locals())
 
 
+@login_required
 def services(request):
     return render(request, "agents/services.html")
 
