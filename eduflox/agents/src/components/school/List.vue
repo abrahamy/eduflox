@@ -22,7 +22,7 @@
 <script>
 import { mapState } from "vuex";
 import VSchoolForm from "./Form";
-import * as K from "../../store/constants";
+import * as K from "../../store/contants.js";
 
 export default {
   name: "VSchool",

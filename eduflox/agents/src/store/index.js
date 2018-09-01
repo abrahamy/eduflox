@@ -1,7 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import axios from "axios";
-import * as K from "./constants";
+import * as K from "./constants.js";
 
 Vue.use(Vuex);
 
@@ -75,18 +74,18 @@ export default new Vuex.Store({
         }
       };
 
-      axios
-        .get(state.urls.school)
-        .then(response => {
+      fetch(state.urls.school)
+        .then(
+          response =>
+            response.ok ? response.json() : Promise.reject(response.statusText)
+        )
+        .then(data => {
           commit("setSchoolData", response.data);
           turnLoadingOff();
         })
-        .catch(error => {
+        .catch(err => {
           turnLoadingOff();
-          let errMsg = error.response
-            ? error.response.statusText
-            : error.message;
-          commit("updateErrorMessage", errMsg);
+          commit("updateErrorMessage", err.message);
         });
     },
     [K.SCHOOL_INIT]({ commit }) {
@@ -94,17 +93,23 @@ export default new Vuex.Store({
     },
     [K.CREATE_SCHOOL]({ commit, state }, data) {
       commit("setLoadingState", true);
-      return axios
-        .post(state.urls.school, data)
+
+      let payload = {
+        method: "POST",
+        credentials: "same-origin",
+        headers: {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        body: JSON.stringify(data)
+      };
+      return fetch(state.urls.school, payload)
         .then(response => {
           commit("setLoadingState", false);
-          return response;
+          return response.ok ? response : Promise.reject(response.statusText);
         })
         .catch(err => {
           commit("setLoadingState", false);
-          return Promise.reject(
-            err.response ? err.response.statusText : err.message
-          );
+          return Promise.reject(err.message);
         });
     }
   }

@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import * as K from "../../store/constants";
+import * as K from "../../store/contants.js";
 export default {
   name: "VSchoolForm",
   props: ["name", "location", "district"],
