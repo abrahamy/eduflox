@@ -1,3 +1,4 @@
+import random
 import uuid
 
 from django.contrib.auth import get_user_model
@@ -7,7 +8,6 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
 from rest_framework.authtoken.models import Token
-
 
 User = get_user_model()
 
@@ -64,7 +64,11 @@ class Invitation(models.Model):
 
 
 class School(models.Model):
-    STATUSES = (("pending", "Pending"), ("approved", "Approved"))
+    STATUSES = (
+        ("pending", "Pending"),
+        ("approved", "Approved"),
+        ("rejected", "Rejected"),
+    )
     name = models.CharField("School", max_length=150)
     location = models.CharField("Location", max_length=25)
     district = models.CharField("District", max_length=25)
@@ -73,6 +77,26 @@ class School(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def _derive_school_code(self):
+        """Generate a school code when inserting a new record"""
+        if self.code:
+            return self.code
+
+        # target format = '{district:04d}{location:02d}{school:04d}'
+        # @todo: reimplement with the correct codes rather than random numbers
+        district = random.randrange(0, 9999)
+        location = random.randrange(0, 99)
+        school = random.randrange(0, 9999)
+
+        code = "{district:04d}{location:02d}{school:04d}".format(
+            district=district, location=location, school=school
+        )
+        return code
+
+    def save(self, **kwargs):
+        self.code = self._derive_school_code()
+        return super(School, self).save(**kwargs)
 
 
 class Service(models.Model):

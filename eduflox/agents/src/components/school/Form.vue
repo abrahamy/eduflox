@@ -8,6 +8,10 @@
       </a>
     </header>
     <section class="modal-card-body">
+      <b-notification type="is-danger" :active="errorMessage.length" has-icon>
+        {{ errorMessage }}
+      </b-notification>
+
       <b-field label="School">
         <b-input :value="name" placeholder="Name of School" required/>
       </b-field>
@@ -27,13 +31,32 @@
 </template>
 
 <script>
+import * as K from "../../store/constants";
 export default {
   name: "VSchoolForm",
   props: ["name", "location", "district"],
+  data() {
+    return {
+      errorMessage: ""
+    };
+  },
   methods: {
     saveForm() {
-      alert("saved!");
-      this.$parent.close();
+      let data = {
+        name: this.$props.name,
+        district: this.$props.district,
+        location: this.$props.location
+      };
+      this.$store
+        .dispatch(K.CREATE_SCHOOL, data)
+        .then(response => {
+          console.log(response);
+          this.$store.dispatch(K.FETCH_SCHOOLS);
+          this.$parent.close();
+        })
+        .catch(err => {
+          this.errorMessage = err.message;
+        });
     }
   }
 };

@@ -20,29 +20,21 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import VSchoolForm from "./Form";
+import * as K from "../../store/constants";
 
 export default {
   name: "VSchool",
   components: {
     VSchoolForm
   },
+  created() {
+    this.$store.dispatch(K.SCHOOL_INIT);
+    this.$store.dispatch(K.FETCH_SCHOOLS);
+  },
   data() {
     return {
-      schools: [],
-      columns: [
-        { field: "name", label: "Name", sortable: true },
-        { field: "code", label: "Code", sortable: true },
-        { field: "location", label: "Location", sortable: true },
-        { field: "district", label: "District", sortable: true },
-        { field: "status", label: "Status", sortable: true },
-        {
-          field: "created_at",
-          label: "Date Created",
-          sortable: true,
-          centered: true
-        }
-      ],
       selected: null,
       loading: false,
       isModalFormActive: false,
@@ -53,6 +45,12 @@ export default {
         district: ""
       }
     };
+  },
+  computed: {
+    ...mapState({
+      columns: state => state.columns,
+      schools: state => state.schools
+    })
   },
   methods: {
     resetForm() {
