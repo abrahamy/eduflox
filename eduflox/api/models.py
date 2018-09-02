@@ -36,6 +36,9 @@ class Agent(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        ordering = ["-created_at", "first_name", "last_name"]
+
 
 def create_token():
     """Create a random token string"""
@@ -62,6 +65,9 @@ class Invitation(models.Model):
 
         return invitation
 
+    class Meta:
+        ordering = ["-invitation_date", "inviter"]
+
 
 class School(models.Model):
     STATUSES = (
@@ -72,8 +78,12 @@ class School(models.Model):
     name = models.CharField("School", max_length=150)
     location = models.CharField("Location", max_length=25)
     district = models.CharField("District", max_length=25)
-    code = models.CharField("School Code", max_length=10, unique=True)
-    status = models.CharField("Status", max_length=20, choices=STATUSES)
+    code = models.CharField(
+        "School Code", max_length=10, unique=True, null=True, blank=True
+    )
+    status = models.CharField(
+        "Status", max_length=20, choices=STATUSES, default="pending"
+    )
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -98,6 +108,9 @@ class School(models.Model):
         self.code = self._derive_school_code()
         return super(School, self).save(**kwargs)
 
+    class Meta:
+        ordering = ["-created_at", "name"]
+
 
 class Service(models.Model):
     school = models.ForeignKey(School, on_delete=models.CASCADE)
@@ -106,6 +119,9 @@ class Service(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        ordering = ["-created_at", "school"]
+
 
 class Invoice(models.Model):
     request_code = models.ForeignKey(Service, on_delete=models.CASCADE)
@@ -113,3 +129,6 @@ class Invoice(models.Model):
     cpe_amount = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-created_at"]

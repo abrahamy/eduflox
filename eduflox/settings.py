@@ -120,6 +120,10 @@ STATIC_URL = "/static/"
 LOGIN_URL = "/signin"
 LOGIN_REDIRECT_URL = "/agents/"
 
+# use axios compatible CSRF cookie name and header
+CSRF_COOKIE_NAME = "XSRF-TOKEN"
+CSRF_HEADER_NAME = "X-XSRF-TOKEN"
+
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework.authentication.TokenAuthentication",

@@ -12,7 +12,7 @@
 
       <!-- school registration form -->
       <b-modal :active.sync="isModalFormActive" :canCancel="false" :onCancel="resetForm" has-modal-card>
-        <v-school-form v-bind="schoolForm"></v-school-form>
+        <v-school-form :school="selected"/>
       </b-modal>
     </div>
   </div>
@@ -22,7 +22,7 @@
 <script>
 import { mapState } from "vuex";
 import VSchoolForm from "./Form";
-import * as K from "../../store/contants.js";
+import * as K from "../../store/constants";
 
 export default {
   name: "VSchool",
@@ -37,13 +37,7 @@ export default {
     return {
       selected: null,
       loading: false,
-      isModalFormActive: false,
-      schoolForm: {
-        name: "",
-        code: "",
-        location: "",
-        district: ""
-      }
+      isModalFormActive: false
     };
   },
   computed: {

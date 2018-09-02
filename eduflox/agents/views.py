@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 from eduflox.api.models import Invitation, School
 
@@ -17,6 +18,7 @@ def dashboard(request):
 
 
 @login_required
+@ensure_csrf_cookie
 def schools(request):
     schools = School.objects.all()
     return render(request, "agents/schools.html", context=locals())

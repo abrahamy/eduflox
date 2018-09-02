@@ -16,11 +16,11 @@
           {% if form.non_field_errors %}
           <em class="has-text-danger">{{ form.non_field_errors }}</em>
           {% endif %}
-          <br/>
+          <br />
           <div class="field">
             <p class="control has-icons-left">
-              <input id="{{ form.username.id_for_label }}" name="{{ form.username.html_name }}" class="input" type="email" placeholder="Email"
-                required>
+              <input id="{{ form.username.id_for_label }}" name="{{ form.username.html_name }}" class="input" type="email"
+                placeholder="Email" required>
               <span class="icon is-left">
                 <i class="mdi mdi-account mdi-24px"></i>
               </span>
@@ -28,8 +28,8 @@
           </div>
           <div class="field">
             <p class="control has-icons-left">
-              <input id="{{ form.password.id_for_label }}" name="{{ form.password.html_name }}" class="input" type="password" placeholder="Password"
-                required>
+              <input id="{{ form.password.id_for_label }}" name="{{ form.password.html_name }}" class="input" type="password"
+                placeholder="Password" required>
               <span class="icon is-left">
                 <i class="mdi mdi-lock mdi-24px"></i>
               </span>
@@ -37,7 +37,7 @@
           </div>
           <div class="field">
             <p class="control">
-              <button type="submit" class="button is-primary">Save</button>
+              <button type="submit" class="button is-primary">Sign In</button>
             </p>
           </div>
 

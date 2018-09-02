@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import * as K from "./constants.js";
+import axios from "axios";
+import * as K from "./constants";
 
 Vue.use(Vuex);
 
@@ -11,7 +12,7 @@ export default new Vuex.Store({
     columns: [],
     loading: false,
     error: "",
-    [K.colunmTypes.SCHOOL]: [
+    [K.columnTypes.SCHOOL]: [
       {
         field: "name",
         label: "Name",
@@ -45,7 +46,7 @@ export default new Vuex.Store({
       }
     ],
     urls: {
-      school: ""
+      school: "/api/schools/"
     }
   },
   mutations: {
@@ -74,42 +75,35 @@ export default new Vuex.Store({
         }
       };
 
-      fetch(state.urls.school)
-        .then(
-          response =>
-            response.ok ? response.json() : Promise.reject(response.statusText)
-        )
-        .then(data => {
+      axios
+        .get(state.urls.school)
+        .then(response => {
           commit("setSchoolData", response.data);
+          console.log(response.data);
           turnLoadingOff();
         })
         .catch(err => {
           turnLoadingOff();
-          commit("updateErrorMessage", err.message);
+          commit(
+            "updateErrorMessage",
+            err.response ? err.response.statusText : err.message
+          );
         });
     },
     [K.SCHOOL_INIT]({ commit }) {
-      commit("setTableColumns", K.colunmTypes.SCHOOL);
+      commit("setTableColumns", K.columnTypes.SCHOOL);
     },
     [K.CREATE_SCHOOL]({ commit, state }, data) {
       commit("setLoadingState", true);
-
-      let payload = {
-        method: "POST",
-        credentials: "same-origin",
-        headers: {
-          "Content-Type": "application/json; charset=utf-8"
-        },
-        body: JSON.stringify(data)
-      };
-      return fetch(state.urls.school, payload)
+      return axios
+        .post(state.urls.school, data)
         .then(response => {
           commit("setLoadingState", false);
-          return response.ok ? response : Promise.reject(response.statusText);
+          return Promise.resolve(response);
         })
         .catch(err => {
           commit("setLoadingState", false);
-          return Promise.reject(err.message);
+          return Promise.reject(err);
         });
     }
   }

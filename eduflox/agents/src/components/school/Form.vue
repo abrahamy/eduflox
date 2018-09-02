@@ -8,44 +8,56 @@
       </a>
     </header>
     <section class="modal-card-body">
-      <b-notification type="is-danger" :active="errorMessage.length" has-icon>
-        {{ errorMessage }}
+      <b-notification type="is-danger" :active="showNotification" has-icon>
+        {{ message }}
       </b-notification>
 
       <b-field label="School">
-        <b-input :value="name" placeholder="Name of School" required/>
+        <b-input v-model="form.name" placeholder="Name of School" required/>
       </b-field>
       <b-field label="Location">
-        <b-input :value="location" placeholder="Ikeja" required/>
+        <b-input v-model="form.location" placeholder="Ikeja" required/>
       </b-field>
       <b-field label="District">
-        <b-input :value="district" placeholder="Lagos" required/>
+        <b-input v-model="form.district" placeholder="Lagos" required/>
       </b-field>
     </section>
     <footer class="modal-card-foot">
       <button class="button" type="button" @click="$parent.close()">Close</button>
-      <button class="button is-primary" @click.prevent="saveForm">Save</button>
+      <button class="button is-primary" type="submit" @click="saveForm">Submit</button>
     </footer>
   </div>
 </form>
 </template>
 
 <script>
-import * as K from "../../store/contants.js";
+import * as K from "../../store/constants";
 export default {
   name: "VSchoolForm",
-  props: ["name", "location", "district"],
+  props: {
+    school: {
+      type: Object,
+      required: false
+    }
+  },
   data() {
+    let school = this.$props.school || {};
     return {
-      errorMessage: ""
+      form: {
+        ...school
+      },
+      message: ""
     };
+  },
+  computed: {
+    showNotification() {
+      return (this.message || "").length ? true : false;
+    }
   },
   methods: {
     saveForm() {
       let data = {
-        name: this.$props.name,
-        district: this.$props.district,
-        location: this.$props.location
+        ...this.form
       };
       this.$store
         .dispatch(K.CREATE_SCHOOL, data)
@@ -55,7 +67,8 @@ export default {
           this.$parent.close();
         })
         .catch(err => {
-          this.errorMessage = err.message;
+          console.log(err);
+          this.message = err.message;
         });
     }
   }
