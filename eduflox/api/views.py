@@ -65,12 +65,12 @@ class SchoolViewSet(viewsets.ModelViewSet):
         return Response({"status": "School {}.".format(status)})
 
     @action(methods=[], detail=True)
-    def approve(self, request, school_id):
+    def approve(self, request, school_id=None):
         """Approve a school"""
         return self._update_status(school_id, "approved")
 
     @action(methods=[], detail=True)
-    def reject(self, request, school_id):
+    def reject(self, request, school_id=None):
         """Reject a school"""
         return self._update_status(school_id, "rejected")
 
