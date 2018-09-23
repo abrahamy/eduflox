@@ -1,12 +1,20 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import axios from "axios";
 import * as K from "./constants";
+import * as coreapi from "coreapi";
 
 Vue.use(Vuex);
 
+const client = new coreapi.Client({
+  auth: new coreapi.auth.SessionAuthentication({
+    csrfCookieName: "csrftoken",
+    csrfHeaderName: "X-CSRFToken"
+  })
+});
+
 export default new Vuex.Store({
   state: {
+    schema: window.schema,
     schools: [],
     services: [],
     columns: [],
@@ -44,10 +52,7 @@ export default new Vuex.Store({
         sortable: true,
         centered: true
       }
-    ],
-    urls: {
-      school: "/api/schools/"
-    }
+    ]
   },
   mutations: {
     setLoadingState(state, isLoading) {
@@ -75,31 +80,35 @@ export default new Vuex.Store({
         }
       };
 
-      axios
-        .get(state.urls.school)
-        .then(response => {
-          commit("setSchoolData", response.data);
-          console.log(response.data);
+      let schema = state.schema;
+      let action = ["schools", "list"];
+
+      client
+        .action(schema, action)
+        .then(schools => {
+          commit("setSchoolData", schools);
+          // eslint-disable-next-line
+          console.log(schools);
           turnLoadingOff();
         })
         .catch(err => {
           turnLoadingOff();
-          commit(
-            "updateErrorMessage",
-            err.response ? err.response.statusText : err.message
-          );
+          commit("updateErrorMessage", err.message);
         });
     },
     [K.SCHOOL_INIT]({ commit }) {
       commit("setTableColumns", K.columnTypes.SCHOOL);
     },
     [K.CREATE_SCHOOL]({ commit, state }, data) {
+      let schema = state.schema;
+      let action = ["schools", "create"];
+
       commit("setLoadingState", true);
-      return axios
-        .post(state.urls.school, data)
-        .then(response => {
+      return client
+        .action(schema, action, data)
+        .then(school => {
           commit("setLoadingState", false);
-          return Promise.resolve(response);
+          return Promise.resolve(school);
         })
         .catch(err => {
           commit("setLoadingState", false);
