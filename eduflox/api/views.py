@@ -9,6 +9,7 @@ from eduflox.api import models, serializers
 
 class AgentViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.AgentSerializer
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get_queryset(self):
         if not self.request.user.is_staff:
@@ -42,14 +43,41 @@ class InvitationViewSet(viewsets.ModelViewSet):
 class SchoolViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.SchoolSerializer
 
+    def get_permissions(self):
+        admin_actions = ["approve", "reject"]
+        if self.action in admin_actions:
+            permission_classes = [permissions.IsAdminUser]
+        else:
+            permission_classes = [permissions.IsAuthenticated]
+
+        return [permission() for permission in permission_classes]
+
     def get_queryset(self):
         if not self.request.user.is_staff:
             return models.School.objects.all()
         return models.School.objects.filter(created_by=self.request.user)
 
+    def _update_status(self, school_id, status):
+        """Update a school's status"""
+        school = get_object_or_404(models.School, school_id)
+        school.status = status
+        school.save()
+        return Response({"status": "School {}.".format(status)})
+
+    @action(methods=[], detail=True)
+    def approve(self, request, school_id):
+        """Approve a school"""
+        return self._update_status(school_id, "approved")
+
+    @action(methods=[], detail=True)
+    def reject(self, request, school_id):
+        """Reject a school"""
+        return self._update_status(school_id, "rejected")
+
 
 class ServiceViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.ServiceSerializer
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get_queryset(self):
         if self.request.user.is_staff:
