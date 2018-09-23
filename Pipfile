@@ -10,6 +10,7 @@ markdown = "*"
 coreapi = "*"
 django-filter = "*"
 django-guardian = "*"
+django-cors-headers = "*"
 
 [dev-packages]
 pylint = "*"
