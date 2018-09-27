@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import * as K from "../../store/constants";
+import { Actions } from "../../store/constants";
 export default {
   name: "VSchoolForm",
   props: {
@@ -56,20 +56,7 @@ export default {
   },
   methods: {
     saveForm() {
-      let data = {
-        ...this.form
-      };
-      this.$store
-        .dispatch(K.CREATE_SCHOOL, data)
-        .then(response => {
-          console.log(response);
-          this.$store.dispatch(K.FETCH_SCHOOLS);
-          this.$parent.close();
-        })
-        .catch(err => {
-          console.log(err);
-          this.message = err.message;
-        });
+      this.$store.dispatch(Actions.AddNewSchool, { ...this.form });
     }
   }
 };

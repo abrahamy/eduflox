@@ -2,7 +2,7 @@
 <div>
   <div class="columns is-multiline">
     <div id="app" class="column">
-      <button class="button is-primary" @click="isModalFormActive = true">
+      <button class="button is-primary" @click="resetForm(); isModalFormActive = true">
         <b-icon size="is-small" icon="plus"/>&nbsp;&nbsp;New
       </button>
       <br/>
@@ -22,7 +22,7 @@
 <script>
 import { mapState } from "vuex";
 import VSchoolForm from "./Form";
-import * as K from "../../store/constants";
+import { Actions, TableColumns } from "../../store/constants";
 
 export default {
   name: "VSchool",
@@ -30,29 +30,24 @@ export default {
     VSchoolForm
   },
   created() {
-    this.$store.dispatch(K.SCHOOL_INIT);
-    this.$store.dispatch(K.FETCH_SCHOOLS);
+    this.$store.dispatch(Actions.GetAllSchools);
   },
   data() {
     return {
       selected: null,
-      loading: false,
+      columns: TableColumns.SchoolTableColumns,
       isModalFormActive: false
     };
   },
   computed: {
     ...mapState({
-      columns: state => state.columns,
+      loading: state => state.loading,
       schools: state => state.schools
     })
   },
   methods: {
     resetForm() {
-      let emptyForm = {};
-      Object.keys(this.schoolForm).map(key => {
-        emptyForm[key] = "";
-      });
-      this.schoolForm = emptyForm;
+      this.selected = null;
     }
   }
 };

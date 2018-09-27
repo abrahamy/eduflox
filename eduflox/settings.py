@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+from corsheaders.defaults import default_headers
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -122,8 +123,11 @@ STATIC_URL = "/static/"
 LOGIN_URL = "/signin"
 LOGIN_REDIRECT_URL = "/agents/"
 
-CORS_ORIGIN_WHITELIST = ("localhost:8000", "127.0.0.1:9000")
-CORS_ALLOW_CREDENTIALS = True
+CSRF_COOKIE_NAME = "XSRF-TOKEN"  # axios
+CSRF_HEADER_NAME = "X-XSRF-TOKEN"  # axios
+
+CORS_ORIGIN_WHITELIST = ("localhost:8000", "127.0.0.1:8000")
+CORS_ALLOW_HEADERS = default_headers + ("X-XSRF-TOKEN",)
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
@@ -138,7 +142,7 @@ REST_FRAMEWORK = {
         "rest_framework.throttling.AnonRateThrottle",
         "rest_framework.throttling.UserRateThrottle",
     ),
-    "DEFAULT_THROTTLE_RATES": {"anon": "100/day", "user": "1000/day"},
+    "DEFAULT_THROTTLE_RATES": {"anon": "1000/day", "user": "10000/day"},
 }
 
 # Settings for Agents App

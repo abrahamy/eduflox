@@ -1,118 +1,60 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import * as K from "./constants";
-import * as coreapi from "coreapi";
+import axios from "axios";
+import { API, Actions as A, Mutations as M } from "./constants";
 
 Vue.use(Vuex);
-
-const client = new coreapi.Client({
-  auth: new coreapi.auth.SessionAuthentication({
-    csrfCookieName: "csrftoken",
-    csrfHeaderName: "X-CSRFToken"
-  })
-});
 
 export default new Vuex.Store({
   state: {
     schema: window.schema,
     schools: [],
     services: [],
-    columns: [],
     loading: false,
-    error: "",
-    [K.columnTypes.SCHOOL]: [
-      {
-        field: "name",
-        label: "Name",
-        sortable: true
-      },
-      {
-        field: "code",
-        label: "Code",
-        sortable: true
-      },
-      {
-        field: "location",
-        label: "Location",
-        sortable: true
-      },
-      {
-        field: "district",
-        label: "District",
-        sortable: true
-      },
-      {
-        field: "status",
-        label: "Status",
-        sortable: true
-      },
-      {
-        field: "created_at",
-        label: "Date Created",
-        sortable: true,
-        centered: true
-      }
-    ]
+    error: ""
   },
   mutations: {
-    setLoadingState(state, isLoading) {
+    [M.SetIsLoading](state, isLoading) {
       state.loading = isLoading;
     },
-    setSchoolData(state, schools) {
+    [M.SetSchools](state, schools) {
       state.schools = [...schools];
     },
-    updateErrorMessage(state, error) {
+    [M.SetErrorMessage](state, error) {
       state.error = error;
-    },
-    setTableColumns(state, columnType) {
-      state.columns = [...state[columnType]];
     }
   },
   actions: {
-    [K.FETCH_SCHOOLS]({ commit, state }, toggleLoading = true) {
-      if (toggleLoading) {
-        commit("setLoadingState", true);
-      }
-
-      let turnLoadingOff = () => {
-        if (toggleLoading) {
-          commit("setLoadingState", false);
-        }
-      };
-
-      let schema = state.schema;
-      let action = ["schools", "list"];
-
-      client
-        .action(schema, action)
-        .then(schools => {
-          commit("setSchoolData", schools);
-          // eslint-disable-next-line
-          console.log(schools);
-          turnLoadingOff();
+    [A.HandleAsyncAError]({ commit }, err) {
+      commit(M.SetIsLoading, false);
+      commit(
+        M.SetErrorMessage,
+        err.response ? err.response.statusText : err.message
+      );
+    },
+    [A.GetAllSchools]({ commit, dispatch }) {
+      commit(M.SetIsLoading, true);
+      axios
+        .get(API.schools)
+        .then(response => {
+          commit(M.SetIsLoading, false);
+          commit(M.SetSchools, response.data);
         })
         .catch(err => {
-          turnLoadingOff();
-          commit("updateErrorMessage", err.message);
+          dispatch(A.HandleAsyncAError, err);
         });
     },
-    [K.SCHOOL_INIT]({ commit }) {
-      commit("setTableColumns", K.columnTypes.SCHOOL);
-    },
-    [K.CREATE_SCHOOL]({ commit, state }, data) {
-      let schema = state.schema;
-      let action = ["schools", "create"];
-
-      commit("setLoadingState", true);
-      return client
-        .action(schema, action, data)
-        .then(school => {
-          commit("setLoadingState", false);
-          return Promise.resolve(school);
+    [A.AddNewSchool]({ commit, dispatch }, data) {
+      commit(M.SetIsLoading, true);
+      axios
+        .post(API.schools)
+        .then(response => {
+          commit(M.SetIsLoading, false);
+          // wait for 2 seconds and reload schools
+          setTimeout(dispatch, [A.GetAllSchools], 2000);
         })
         .catch(err => {
-          commit("setLoadingState", false);
-          return Promise.reject(err);
+          dispatch(A.HandleAsyncAError, err);
         });
     }
   }
