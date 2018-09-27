@@ -1,5 +1,5 @@
 <template>
-<form action="">
+<form ref="form" action="">
   <div class="modal-card">
     <header class="modal-card-head">
       <p class="modal-card-title">Create New School</p>
@@ -24,14 +24,15 @@
     </section>
     <footer class="modal-card-foot">
       <button class="button" type="button" @click="$parent.close()">Close</button>
-      <button class="button is-primary" type="submit" @click="saveForm">Submit</button>
+      <button class="button is-primary" type="submit" @click.prevent="saveForm">Submit</button>
     </footer>
   </div>
 </form>
 </template>
 
 <script>
-import { Actions } from "../../store/constants";
+import { mapState } from "vuex";
+import { Actions, Mutations as M } from "../../store/constants";
 export default {
   name: "VSchoolForm",
   props: {
@@ -45,18 +46,21 @@ export default {
     return {
       form: {
         ...school
-      },
-      message: ""
+      }
     };
   },
   computed: {
-    showNotification() {
-      return (this.message || "").length ? true : false;
-    }
+    ...mapState({
+      message: state => state.errorMessage,
+      showNotification: state => state.errorMessage.length > 0
+    })
   },
   methods: {
     saveForm() {
-      this.$store.dispatch(Actions.AddNewSchool, { ...this.form });
+      if (this.$refs.form.checkValidity()) {
+        this.$store.dispatch(Actions.AddNewSchool, { ...this.form });
+      }
+      this.$store.commit(M.errorMessage, "Please complete all fields.");
     }
   }
 };

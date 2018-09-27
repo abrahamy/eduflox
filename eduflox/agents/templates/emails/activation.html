@@ -1,0 +1,9 @@
+{% autoescape off %}
+Hi {{ user.first_name|capfirst }},
+
+Thanks for signing up as an agent on EduFlox portal. Please click on the link below to activate your account.
+
+http://{{ domain }}{% url 'password_reset_confirm' uidb64=uid token=token %}
+
+Your friends at EduFlox!
+{% endautoescape %}

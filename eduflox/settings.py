@@ -123,8 +123,13 @@ STATIC_URL = "/static/"
 LOGIN_URL = "/signin"
 LOGIN_REDIRECT_URL = "/agents/"
 
-CSRF_COOKIE_NAME = "XSRF-TOKEN"  # axios
-CSRF_HEADER_NAME = "X-XSRF-TOKEN"  # axios
+# Email Settings
+EMAIL_HOST = ""
+EMAIL_PORT = ""
+EMAIL_HOST_USER = ""
+EMAIL_HOST_PASSWORD = ""
+EMAIL_USE_TLS = ""
+EMAIL_USE_SSL = ""
 
 CORS_ORIGIN_WHITELIST = ("localhost:8000", "127.0.0.1:8000")
 CORS_ALLOW_HEADERS = default_headers + ("X-XSRF-TOKEN",)
@@ -149,3 +154,6 @@ REST_FRAMEWORK = {
 AGENT_INVITE_EMAIL_SUBJECT = "Invitation to Join Eduflox"
 AGENT_INVITE_EMAIL_MESSAGE = "Hi there,\nYou've been invited to join the Eduflox portal. Follow the link below to join.\n"
 AGENT_INVITE_EMAIL_HTML_MESSAGE = "email/invite.html"
+
+EDUFLOX_ACTIVATION_EMAIL_SUBJECT = "Welcome to Eduflox!"
+EDUFLOX_ACTIVATION_EMAIL_TEMPLATE = "emails/activation.html"

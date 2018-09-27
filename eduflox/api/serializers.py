@@ -6,6 +6,7 @@ class AgentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Agent
         fields = "__all__"
+        extra_kwargs = {"user": {"read_only": True}}
 
 
 class InvitationSerializer(serializers.ModelSerializer):
@@ -18,12 +19,14 @@ class SchoolSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.School
         fields = "__all__"
+        extra_kwargs = {"created_by": {"default": serializers.CurrentUserDefault()}}
 
 
 class ServiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Service
         fields = "__all__"
+        extra_kwargs = {"requested_by": {"default": serializers.CurrentUserDefault()}}
 
 
 class InvoiceSerializer(serializers.ModelSerializer):

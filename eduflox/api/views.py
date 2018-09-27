@@ -1,6 +1,13 @@
-from django.shortcuts import get_object_or_404, render
+import base64
+
+from django.conf import settings
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import EmailMessage
+from django.shortcuts import get_object_or_404
+from django.template.loader import render_to_string
 from django.utils import timezone
-from rest_framework import permissions, viewsets
+from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -15,6 +22,39 @@ class AgentViewSet(viewsets.ModelViewSet):
         if not self.request.user.is_staff:
             return models.Agent.objects.filter(user=self.request.user)
         return models.Agent.objects.all()
+
+    def _send_activation_email(self, request, new_user):
+        current_site = get_current_site(request)
+        message = render_to_string(
+            "activation.html",
+            {
+                "user": new_user,
+                "domain": current_site.domain,
+                "uid": base64.urlsafe_b64encode(new_user.pk),
+                "token": default_token_generator.make_token(new_user),
+            },
+        )
+
+        mail_subject = settings.EDUFLOX_ACTIVATION_EMAIL_SUBJECT
+        email = EmailMessage(mail_subject, message, to=[new_user.email])
+        email.send()
+
+    def post(self, request, format=None):
+        """Create new agent"""
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            user_email = serializer.data["email"]
+            user = models.User.objects.create_user(
+                user_email,
+                email=user_email,
+                first_name=serializer.data["first_name"],
+                last_name=serializer.data["last_name"],
+            )
+            serializer.save(user=user)
+            self._send_activation_email(request, user)
+
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class InvitationViewSet(viewsets.ModelViewSet):

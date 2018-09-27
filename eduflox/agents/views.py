@@ -20,7 +20,6 @@ def dashboard(request):
 @login_required
 @ensure_csrf_cookie
 def schools(request):
-    schools = School.objects.all()
     return render(request, "agents/schools.html", context=locals())
 
 
@@ -61,3 +60,7 @@ def join(request, invitation_token):
             return redirect("/dashboard")
 
     return render(request, "join.html", context={"form": form})
+
+
+def activate(request, token):
+    pass
