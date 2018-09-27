@@ -59,6 +59,7 @@ export default {
     saveForm() {
       if (this.$refs.form.checkValidity()) {
         this.$store.dispatch(Actions.AddNewSchool, { ...this.form });
+        this.$parent.close();
       }
       this.$store.commit(M.errorMessage, "Please complete all fields.");
     }

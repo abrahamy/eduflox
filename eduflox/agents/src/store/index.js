@@ -37,7 +37,7 @@ export default new Vuex.Store({
       }
 
       commit(M.SetErrorMessage, message);
-      setTimeout(commit, [M.SetErrorMessage, ""], 5000);
+      setTimeout(commit, 5000, M.SetErrorMessage, "");
     },
     [A.GetAllSchools]({ commit, dispatch }) {
       commit(M.SetIsLoading, true);
@@ -58,7 +58,7 @@ export default new Vuex.Store({
         .then(() => {
           commit(M.SetIsLoading, false);
           // wait for 2 seconds and reload schools
-          setTimeout(dispatch, [A.GetAllSchools], 2000);
+          setTimeout(dispatch, 2000, A.GetAllSchools);
         })
         .catch(err => {
           dispatch(A.HandleAsyncAError, err);
