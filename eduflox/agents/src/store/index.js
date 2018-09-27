@@ -47,7 +47,7 @@ export default new Vuex.Store({
     [A.AddNewSchool]({ commit, dispatch }, data) {
       commit(M.SetIsLoading, true);
       axios
-        .post(API.schools)
+        .post(API.schools, data)
         .then(response => {
           commit(M.SetIsLoading, false);
           // wait for 2 seconds and reload schools
