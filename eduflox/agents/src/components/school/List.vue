@@ -8,7 +8,53 @@
       <br/>
 
       <!-- school list -->
-      <b-table :data="schools" :columns="columns" :selected.sync="selected" focusable></b-table>
+      <b-table
+        :data="schools"
+        :loading="loading"
+        paginated
+        pagination-simple
+        hoverable
+        striped>
+        <template slot-scope="props">
+          <b-table-column field="name" label="School" sortable>
+            {{ props.row.name }}
+          </b-table-column>
+          <b-table-column field="code" label="Code" sortable>
+            {{ props.row.code }}
+          </b-table-column>
+          <b-table-column field="location" label="Location" sortable>
+            {{ props.row.location }}
+          </b-table-column>
+          <b-table-column field="district" label="District" sortable>
+            {{ props.row.district }}
+          </b-table-column>
+          <b-table-column field="status" label="Status" sortable>
+            {{ props.row.status }}
+          </b-table-column>
+          <b-table-column field="created_at" label="Date Created" sortable>
+            {{ $moment(props.row.created_at).format('LL') }}
+          </b-table-column>
+          <b-table-column label="">
+            <p class="buttons is-success">
+              <a class="button is-success is-outlined">
+                <b-icon icon="pencil"></b-icon>
+              </a>
+              <a class="button is-danger is-outlined">
+                <b-icon icon="delete"></b-icon>
+              </a>
+            </p>
+          </b-table-column>
+        </template>
+
+        <template slot="empty">
+          <section class="section">
+            <div class="content has-text-grey has-text-centered">
+              <p><b-icon icon="emoticon-sad" size="is-large"></b-icon></p>
+              <p>Nothing here.</p>
+            </div>
+          </section>
+        </template>
+      </b-table>
 
       <!-- school registration form -->
       <b-modal :active.sync="isModalFormActive" :canCancel="false" :onCancel="resetForm" has-modal-card>
@@ -20,9 +66,9 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 import VSchoolForm from "./Form";
-import { Actions, TableColumns } from "../../store/constants";
+import { Actions } from "../../store/constants";
 
 export default {
   name: "VSchool",
@@ -30,12 +76,11 @@ export default {
     VSchoolForm
   },
   created() {
-    this.$store.dispatch(Actions.GetAllSchools);
+    this.getAllSchools();
   },
   data() {
     return {
       selected: null,
-      columns: TableColumns.SchoolTableColumns,
       isModalFormActive: false
     };
   },
@@ -46,6 +91,9 @@ export default {
     })
   },
   methods: {
+    ...mapActions({
+      getAllSchools: Actions.GetAllSchools
+    }),
     resetForm() {
       this.selected = null;
     }
