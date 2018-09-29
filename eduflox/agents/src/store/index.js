@@ -1,12 +1,10 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import axios from "axios";
-import { API, Actions as A, Mutations as M } from "./constants";
+import { Actions as A, Mutations as M } from "./constants";
+import schoolActions from "./actions/school";
+import serviceActions from "./actions/service";
 
 Vue.use(Vuex);
-
-axios.defaults.xsrfCookieName = "csrftoken";
-axios.defaults.xsrfHeaderName = "X-CSRFToken";
 
 export default new Vuex.Store({
   state: {
@@ -22,6 +20,9 @@ export default new Vuex.Store({
     },
     [M.SetSchools](state, schools) {
       state.schools = [...schools];
+    },
+    [M.SetServices](state, services) {
+      state.services = [...services];
     },
     [M.SetErrorMessage](state, errorMessage) {
       state.errorMessage = errorMessage;
@@ -39,30 +40,7 @@ export default new Vuex.Store({
       commit(M.SetErrorMessage, message);
       setTimeout(commit, 5000, M.SetErrorMessage, "");
     },
-    [A.GetAllSchools]({ commit, dispatch }) {
-      commit(M.SetIsLoading, true);
-      axios
-        .get(API.schools)
-        .then(response => {
-          commit(M.SetIsLoading, false);
-          commit(M.SetSchools, response.data.results);
-        })
-        .catch(err => {
-          dispatch(A.HandleAsyncAError, err);
-        });
-    },
-    [A.AddNewSchool]({ commit, dispatch }, data) {
-      commit(M.SetIsLoading, true);
-      axios
-        .post(API.schools, data)
-        .then(() => {
-          commit(M.SetIsLoading, false);
-          // wait for 2 seconds and reload schools
-          setTimeout(dispatch, 2000, A.GetAllSchools);
-        })
-        .catch(err => {
-          dispatch(A.HandleAsyncAError, err);
-        });
-    }
+    ...schoolActions,
+    ...serviceActions
   }
 });

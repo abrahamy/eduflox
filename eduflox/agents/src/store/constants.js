@@ -12,12 +12,16 @@ export const Actions = {
   GetService: "getService",
   // Update
   UpdateExistingSchool: "updateExistingSchool",
-  UpdateExistingService: "updateExistingService"
+  UpdateExistingService: "updateExistingService",
+  // Delete
+  DeleteExistingSchool: "deleteExistingSchool",
+  DeleteExistingService: "deleteExistingService"
 };
 
 export const Mutations = {
   SetIsLoading: "setIsLoading",
   SetSchools: "setSchools",
+  SetServices: "setServices",
   SetErrorMessage: "setErrorMessage"
 };
 
