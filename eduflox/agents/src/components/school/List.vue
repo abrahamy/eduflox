@@ -36,10 +36,10 @@
           </b-table-column>
           <b-table-column label="">
             <p class="buttons is-success">
-              <a class="button is-success is-outlined">
+              <a class="button is-success is-outlined" @click.prevent="editRow(props.row)">
                 <b-icon icon="pencil"></b-icon>
               </a>
-              <a class="button is-danger is-outlined">
+              <a class="button is-danger is-outlined" @click.prevent="deleteRow(props.row)">
                 <b-icon icon="delete"></b-icon>
               </a>
             </p>
@@ -92,8 +92,30 @@ export default {
   },
   methods: {
     ...mapActions({
-      getAllSchools: Actions.GetAllSchools
+      getAllSchools: Actions.GetAllSchools,
+      deleteSchool: Actions.DeleteExistingSchool
     }),
+    editRow(school) {
+      this.selected = school;
+      this.isModalFormActive = true;
+    },
+    deleteRow(school) {
+      this.$dialog.confirm({
+        title: "Confirm Action",
+        message: `Are you sure you want to <b>delete</b> ${
+          school.name
+        }? This action cannot be undone.`,
+        confirmText: "Delete",
+        type: "is-danger",
+        hasIcon: true,
+        onConfirm: () => {
+          this.deleteSchool(school);
+          setTimeout(() => {
+            this.$toast.open("School deleted!");
+          }, 3000);
+        }
+      });
+    },
     resetForm() {
       this.selected = null;
     }

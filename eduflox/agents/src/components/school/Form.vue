@@ -31,21 +31,22 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import { Actions, Mutations as M } from "../../store/constants";
+import { mapState, mapActions } from "vuex";
+import { Actions } from "../../store/constants";
 export default {
   name: "VSchoolForm",
   props: {
     school: {
       type: Object,
-      required: false
+      default() {
+        return {};
+      }
     }
   },
   data() {
-    let school = this.$props.school || {};
     return {
       form: {
-        ...school
+        ...this.$props.school
       }
     };
   },
@@ -53,15 +54,28 @@ export default {
     ...mapState({
       message: state => state.errorMessage,
       showNotification: state => state.errorMessage.length > 0
-    })
+    }),
+    isEditing() {
+      return this.$props.school && this.$props.school.id;
+    }
   },
   methods: {
+    ...mapActions({
+      addNewSchool: Actions.AddNewSchool,
+      updateExistingSchool: Actions.UpdateExistingSchool,
+      sendError: Actions.SendError
+    }),
     saveForm() {
       if (this.$refs.form.checkValidity()) {
-        this.$store.dispatch(Actions.AddNewSchool, { ...this.form });
+        let data = { ...this.form };
+        if (this.isEditing) {
+          this.updateExistingSchool(data);
+        } else {
+          this.addNewSchool(data);
+        }
         this.$parent.close();
       }
-      this.$store.commit(M.errorMessage, "Please complete all fields.");
+      this.sendError("Please complete all fields.");
     }
   }
 };

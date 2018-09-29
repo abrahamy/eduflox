@@ -1,5 +1,5 @@
 export const Actions = {
-  CallBackend: "apiCall",
+  SendError: "sendError",
   HandleAsyncAError: "handleAsyncAError",
   // List
   GetAllSchools: "getAllSchools",

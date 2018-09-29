@@ -29,7 +29,12 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    [A.HandleAsyncAError]({ commit }, err) {
+    [A.SendError]({ commit }, errorMessage) {
+      commit(M.SetErrorMessage, errorMessage);
+      // clear the error message after 5 seconds
+      setTimeout(commit, 5000, M.SetErrorMessage, "");
+    },
+    [A.HandleAsyncAError]({ commit, dispatch }, err) {
       commit(M.SetIsLoading, false);
 
       let message = err.message;
@@ -37,8 +42,7 @@ export default new Vuex.Store({
         message = err.response.data.detail || err.response.statusText;
       }
 
-      commit(M.SetErrorMessage, message);
-      setTimeout(commit, 5000, M.SetErrorMessage, "");
+      dispatch(A.SendError, message);
     },
     ...schoolActions,
     ...serviceActions

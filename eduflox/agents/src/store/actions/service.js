@@ -33,8 +33,9 @@ export default {
   },
   [A.UpdateExistingService]({ commit, dispatch }, service) {
     commit(M.SetIsLoading, true);
+    let url = `${API.services}${service.id}/`;
     axios
-      .post(API.services + service.id, service)
+      .put(url, service)
       .then(() => {
         commit(M.SetIsLoading, false);
         // wait for 2 seconds and reload schools
@@ -46,8 +47,9 @@ export default {
   },
   [A.DeleteExistingService]({ commit, dispatch }, service) {
     commit(M.SetIsLoading, true);
+    let url = `${API.services}${service.id}/`;
     axios
-      .delete(API.services + service.id)
+      .delete(url)
       .then(() => {
         commit(M.SetIsLoading, false);
         // wait for 2 seconds and reload schools
