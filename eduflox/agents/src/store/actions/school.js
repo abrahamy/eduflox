@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API, Actions as A, Mutations as M } from "../constants";
+import { API, Actions as A, Mutations as M, Status } from "../constants";
 
 axios.defaults.xsrfCookieName = "csrftoken";
 axios.defaults.xsrfHeaderName = "X-CSRFToken";
@@ -50,6 +50,23 @@ export default {
     let url = `${API.schools}${school.id}/`;
     axios
       .delete(url)
+      .then(() => {
+        commit(M.SetIsLoading, false);
+        // wait for 2 seconds and reload schools
+        setTimeout(dispatch, 2000, A.GetAllSchools);
+      })
+      .catch(err => {
+        dispatch(A.HandleAsyncAError, err);
+      });
+  },
+  [A.ApproveOrRejectSchool]({ commit, dispatch }, school) {
+    commit(M.SetIsLoading, true);
+
+    let op = school.status === Status.Approved ? "reject" : "approve";
+    let url = `${API.schools}${school.id}/${op}/`;
+
+    axios
+      .post(url, school)
       .then(() => {
         commit(M.SetIsLoading, false);
         // wait for 2 seconds and reload schools

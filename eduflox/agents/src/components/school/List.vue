@@ -2,8 +2,8 @@
 <div>
   <div class="columns is-multiline">
     <div id="app" class="column">
-      <button class="button is-primary" @click="resetForm(); isModalFormActive = true">
-        <b-icon size="is-small" icon="plus"/>&nbsp;&nbsp;New
+      <button class="button is-info" @click="resetForm(); isModalFormActive = true">
+        <b-icon size="is-small" icon="playlist-plus"/>&nbsp;&nbsp;Create
       </button>
       <br/>
 
@@ -35,9 +35,12 @@
             {{ $moment(props.row.created_at).format('LL') }}
           </b-table-column>
           <b-table-column label="">
-            <p class="buttons is-success">
-              <a class="button is-success is-outlined" @click.prevent="editRow(props.row)">
+            <p class="buttons">
+              <a class="button is-info is-outlined" @click.prevent="editRow(props.row)">
                 <b-icon icon="pencil"></b-icon>
+              </a>
+              <a v-if="isAdmin" :class="getAdminButtonStyle(props.row)" @click.prevent="approveOrRejectSchool(props.row)">
+                <b-icon :icon="getAdminButtonIcon(props.row)"></b-icon>
               </a>
               <a class="button is-danger is-outlined" @click.prevent="deleteRow(props.row)">
                 <b-icon icon="delete"></b-icon>
@@ -68,7 +71,7 @@
 <script>
 import { mapState, mapActions } from "vuex";
 import VSchoolForm from "./Form";
-import { Actions } from "../../store/constants";
+import { Actions, Status } from "../../store/constants";
 
 export default {
   name: "VSchool",
@@ -86,6 +89,7 @@ export default {
   },
   computed: {
     ...mapState({
+      isAdmin: state => state.isAdminUser,
       loading: state => state.loading,
       schools: state => state.schools
     })
@@ -93,8 +97,23 @@ export default {
   methods: {
     ...mapActions({
       getAllSchools: Actions.GetAllSchools,
-      deleteSchool: Actions.DeleteExistingSchool
+      deleteSchool: Actions.DeleteExistingSchool,
+      approveOrRejectSchool: Actions.ApproveOrRejectSchool
     }),
+    getAdminButtonIcon(school) {
+      return school.status === Status.Approved
+        ? "close-circle"
+        : "check-circle";
+    },
+    getAdminButtonStyle(school) {
+      let buttonStyle = "button is-outlined";
+      if (school.status === Status.Approved) {
+        buttonStyle += " is-warning";
+      } else {
+        buttonStyle += " is-success";
+      }
+      return buttonStyle;
+    },
     editRow(school) {
       this.selected = school;
       this.isModalFormActive = true;

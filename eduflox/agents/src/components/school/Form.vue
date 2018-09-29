@@ -2,7 +2,7 @@
 <form ref="form" action="">
   <div class="modal-card">
     <header class="modal-card-head">
-      <p class="modal-card-title">Create New School</p>
+      <p class="modal-card-title">{{ titleText }}</p>
       <a href="#" class="card-header-icon" @click.prevent="$parent.close()">
         <b-icon icon='close'/>
       </a>
@@ -57,6 +57,9 @@ export default {
     }),
     isEditing() {
       return this.$props.school && this.$props.school.id;
+    },
+    titleText() {
+      return this.isEditing ? "Edit School" : "New School";
     }
   },
   methods: {

@@ -15,7 +15,9 @@ export const Actions = {
   UpdateExistingService: "updateExistingService",
   // Delete
   DeleteExistingSchool: "deleteExistingSchool",
-  DeleteExistingService: "deleteExistingService"
+  DeleteExistingService: "deleteExistingService",
+  // Others
+  ApproveOrRejectSchool: "approveOrRejectSchool"
 };
 
 export const Mutations = {
@@ -31,4 +33,10 @@ export const API = {
   invoices: "/api/invoices/",
   schools: "/api/schools/",
   services: "/api/services/"
+};
+
+export const Status = {
+  Approved: "approved",
+  Pending: "pending",
+  Rejected: "rejected"
 };

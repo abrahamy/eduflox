@@ -84,18 +84,18 @@ class SchoolViewSet(viewsets.ModelViewSet):
 
     def _update_status(self, school_id, status):
         """Update a school's status"""
-        school = get_object_or_404(models.School, school_id)
+        school = get_object_or_404(models.School, pk=school_id)
         school.status = status
         school.save()
         return Response({"status": "School {}.".format(status)})
 
     @action(methods=["post"], detail=True, permission_classes=[permissions.IsAdminUser])
-    def approve(self, request, pk):
+    def approve(self, request, pk=None):
         """Approve a school"""
         return self._update_status(pk, "approved")
 
     @action(methods=["post"], detail=True, permission_classes=[permissions.IsAdminUser])
-    def reject(self, request, pk):
+    def reject(self, request, pk=None):
         """Reject a school"""
         return self._update_status(pk, "rejected")
 
