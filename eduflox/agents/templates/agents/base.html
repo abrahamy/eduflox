@@ -106,6 +106,9 @@
 
   <!-- Scripts -->
   {% block js %}
+  {% if user.is_authenticated and user.is_staff %}
+  <script>window.isAdminUser = true</script>
+  {% endif %}
   <script src="{% static '/agents/js/chunk-vendors.js' %}"></script>
   <script src="{% static '/agents/app.js' %}"></script>
   <!-- agents/base.html ends here -->
