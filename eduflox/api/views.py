@@ -16,12 +16,12 @@ from eduflox.api import models, serializers
 
 class AgentViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.AgentSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        if not self.request.user.is_staff:
-            return models.Agent.objects.filter(user=self.request.user)
-        return models.Agent.objects.all()
+        if self.request.user.is_staff:
+            return models.Agent.objects.all()
+        return models.Agent.objects.filter(user=self.request.user)
 
     def _send_activation_email(self, request, new_user):
         current_site = get_current_site(request)
@@ -60,16 +60,9 @@ class AgentViewSet(viewsets.ModelViewSet):
 class InvitationViewSet(viewsets.ModelViewSet):
     queryset = models.Invitation.objects.all()
     serializer_class = serializers.InvitationSerializer
+    permission_classes = (permissions.IsAdminUser,)
 
-    def get_permissions(self):
-        if self.action == "accept":
-            permission_classes = [permissions.IsAuthenticated]
-        else:
-            permission_classes = [permissions.IsAdminUser]
-
-        return [permission() for permission in permission_classes]
-
-    @action(methods=[], detail=True)
+    @action(methods=["post"], detail=True, permission_classes=[permissions.AllowAny])
     def accept(self, request, token=None):
         # Accept invitation if it has not lapsed else return 404
         seven_days_ago = timezone.now() - timezone.timedelta(days=7)
@@ -82,18 +75,10 @@ class InvitationViewSet(viewsets.ModelViewSet):
 
 class SchoolViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.SchoolSerializer
-
-    def get_permissions(self):
-        admin_actions = ["approve", "reject"]
-        if self.action in admin_actions:
-            permission_classes = [permissions.IsAdminUser]
-        else:
-            permission_classes = [permissions.IsAuthenticated]
-
-        return [permission() for permission in permission_classes]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        if not self.request.user.is_staff:
+        if self.request.user.is_staff:
             return models.School.objects.all()
         return models.School.objects.filter(created_by=self.request.user)
 
@@ -104,15 +89,15 @@ class SchoolViewSet(viewsets.ModelViewSet):
         school.save()
         return Response({"status": "School {}.".format(status)})
 
-    @action(methods=[], detail=True)
-    def approve(self, request, school_id=None):
+    @action(methods=["post"], detail=True, permission_classes=[permissions.IsAdminUser])
+    def approve(self, request, pk):
         """Approve a school"""
-        return self._update_status(school_id, "approved")
+        return self._update_status(pk, "approved")
 
-    @action(methods=[], detail=True)
-    def reject(self, request, school_id=None):
+    @action(methods=["post"], detail=True, permission_classes=[permissions.IsAdminUser])
+    def reject(self, request, pk):
         """Reject a school"""
-        return self._update_status(school_id, "rejected")
+        return self._update_status(pk, "rejected")
 
 
 class ServiceViewSet(viewsets.ModelViewSet):
