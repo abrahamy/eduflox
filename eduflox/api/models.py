@@ -22,7 +22,7 @@ class Agent(models.Model):
     MOBILE_NUMBER_VALIDATOR = RegexValidator(
         regex=r"^\d{11}$", message="Invalid mobile number."
     )
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="agent")
     first_name = models.CharField("First Name", max_length=25)
     middle_name = models.CharField("Middle Name", max_length=25, null=True)
     last_name = models.CharField("Last Name", max_length=25)
@@ -46,7 +46,9 @@ def create_token():
 
 
 class Invitation(models.Model):
-    inviter = models.ForeignKey(User, on_delete=models.CASCADE)
+    inviter = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="invitations"
+    )
     invitee_email = models.EmailField("Invitee Email")
     token = models.CharField("Token", max_length=75, unique=True, default=create_token)
     invitation_date = models.DateTimeField(auto_now_add=True)
@@ -84,7 +86,9 @@ class School(models.Model):
     status = models.CharField(
         "Status", max_length=20, choices=STATUSES, default="pending"
     )
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_by = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="schools"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -108,15 +112,20 @@ class School(models.Model):
         self.code = self._derive_school_code()
         return super(School, self).save(**kwargs)
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         ordering = ["-created_at", "name"]
 
 
 class Service(models.Model):
-    school = models.ForeignKey(School, on_delete=models.CASCADE, related_name="school")
+    school = models.ForeignKey(
+        School, on_delete=models.CASCADE, related_name="services"
+    )
     service_description = models.TextField()
     requested_by = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="requested_by"
+        User, on_delete=models.CASCADE, related_name="services"
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

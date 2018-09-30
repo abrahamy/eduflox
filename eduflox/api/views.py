@@ -18,14 +18,26 @@ from eduflox.api import models, serializers
 log = logging.getLogger(__name__)
 
 
+class UserViewset(viewsets.ReadOnlyModelViewSet):
+    serializer_class = serializers.UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_staff:
+            return models.User.objects.all()
+        return models.User.objects.filter(username=user.username)
+
+
 class AgentViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.AgentSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        if self.request.user.is_staff:
+        user = self.request.user
+        if user.is_staff:
             return models.Agent.objects.all()
-        return models.Agent.objects.filter(user=self.request.user)
+        return models.Agent.objects.filter(user=user)
 
     def _send_activation_email(self, request, new_user):
         current_site = get_current_site(request)
@@ -82,9 +94,10 @@ class SchoolViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        if self.request.user.is_staff:
+        user = self.request.user
+        if user.is_staff:
             return models.School.objects.all()
-        return models.School.objects.filter(created_by=self.request.user)
+        return models.School.objects.filter(created_by=user)
 
     def _update_status(self, school_id, status):
         """Update a school's status"""
@@ -109,18 +122,10 @@ class ServiceViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        if self.request.user.is_staff:
+        user = self.request.user
+        if user.is_staff:
             return models.Service.objects.all()
-        return models.Service.objects.filter(requested_by=self.request.user)
-
-    def post(self, request, format=None):
-        """Create new service"""
-        log.info(request.data)
-        serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid():
-            serializer.save(requested_by=request.user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return models.Service.objects.filter(requested_by=user)
 
 
 class InvoiceViewSet(viewsets.ModelViewSet):
