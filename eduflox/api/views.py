@@ -1,4 +1,5 @@
 import base64
+import logging
 
 from django.conf import settings
 from django.contrib.auth.tokens import default_token_generator
@@ -12,6 +13,9 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from eduflox.api import models, serializers
+
+
+log = logging.getLogger(__name__)
 
 
 class AgentViewSet(viewsets.ModelViewSet):
@@ -60,7 +64,7 @@ class AgentViewSet(viewsets.ModelViewSet):
 class InvitationViewSet(viewsets.ModelViewSet):
     queryset = models.Invitation.objects.all()
     serializer_class = serializers.InvitationSerializer
-    permission_classes = (permissions.IsAdminUser,)
+    permission_classes = [permissions.IsAdminUser]
 
     @action(methods=["post"], detail=True, permission_classes=[permissions.AllowAny])
     def accept(self, request, token=None):
@@ -102,12 +106,21 @@ class SchoolViewSet(viewsets.ModelViewSet):
 
 class ServiceViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.ServiceSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         if self.request.user.is_staff:
             return models.Service.objects.all()
         return models.Service.objects.filter(requested_by=self.request.user)
+
+    def post(self, request, format=None):
+        """Create new service"""
+        log.info(request.data)
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            serializer.save(requested_by=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class InvoiceViewSet(viewsets.ModelViewSet):

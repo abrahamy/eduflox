@@ -113,9 +113,11 @@ class School(models.Model):
 
 
 class Service(models.Model):
-    school = models.ForeignKey(School, on_delete=models.CASCADE)
+    school = models.ForeignKey(School, on_delete=models.CASCADE, related_name="school")
     service_description = models.TextField()
-    requested_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    requested_by = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="requested_by"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
