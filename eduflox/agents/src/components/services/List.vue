@@ -16,11 +16,14 @@
         hoverable
         striped>
         <template slot-scope="props">
-          <b-table-column field="school" label="School" sortable>
-            {{ props.row.school }}
+          <b-table-column field="school_name" label="School" sortable>
+            {{ props.row.school_name }}
           </b-table-column>
           <b-table-column field="service_description" label="Description" sortable>
             {{ props.row.service_description }}
+          </b-table-column>
+          <b-table-column v-if="isAdmin" field="agent" label="Agent" sortable>
+            {{ props.row.agent }}
           </b-table-column>
           <b-table-column field="created_at" label="Date Created" sortable>
             {{ $moment(props.row.created_at).format('LL') }}

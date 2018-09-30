@@ -34,8 +34,12 @@ export default {
   [A.UpdateExistingService]({ commit, dispatch }, service) {
     commit(M.SetIsLoading, true);
     let url = `${API.services}${service.id}/`;
+    let payload = {
+      id: service.id,
+      service_description: service.service_description
+    };
     axios
-      .put(url, service)
+      .patch(url, payload)
       .then(() => {
         commit(M.SetIsLoading, false);
         // wait for 2 seconds and reload schools

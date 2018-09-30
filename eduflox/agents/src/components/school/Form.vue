@@ -16,7 +16,7 @@
         <b-input v-model="form.name" placeholder="Name of School" required/>
       </b-field>
       <b-field label="Location">
-        <b-input v-model="form.location" placeholder="Ikeja" required/>
+        <b-input v-model="form.location" placeholder="Ikeja" :readonly="isEditing" required/>
       </b-field>
       <b-field label="District">
         <b-input v-model="form.district" placeholder="Lagos" required/>
