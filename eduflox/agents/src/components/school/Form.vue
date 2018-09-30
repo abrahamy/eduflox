@@ -8,9 +8,6 @@
       </a>
     </header>
     <section class="modal-card-body">
-      <b-notification type="is-danger" :active="showNotification" has-icon>
-        {{ message }}
-      </b-notification>
 
       <b-field label="School">
         <b-input v-model="form.name" placeholder="Name of School" required/>
@@ -21,6 +18,7 @@
       <b-field label="District">
         <b-input v-model="form.district" placeholder="Lagos" required/>
       </b-field>
+
     </section>
     <footer class="modal-card-foot">
       <button class="button" type="button" @click="$parent.close()">Close</button>
@@ -31,7 +29,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapActions } from "vuex";
 import { Actions } from "../../store/constants";
 export default {
   name: "VSchoolForm",
@@ -51,10 +49,6 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      message: state => state.errorMessage,
-      showNotification: state => state.errorMessage.length > 0
-    }),
     isEditing() {
       return this.$props.school && this.$props.school.id;
     },
@@ -77,8 +71,14 @@ export default {
           this.addNewSchool(data);
         }
         this.$parent.close();
+        return;
       }
-      this.sendError("Please complete all fields.");
+      this.$toast.open({
+        duration: 3000,
+        message: "Please complete all fields.",
+        position: "is-top",
+        type: "is-danger"
+      });
     }
   }
 };

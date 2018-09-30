@@ -10,7 +10,7 @@
     <section class="modal-card-body">
 
       <b-field label="School">
-        <b-select v-model="form.school" placeholder="Select a school" is-full required>
+        <b-select v-model="form.school" placeholder="Select a school" expanded required>
           <option v-for="school in schools" :key="school.id" :value="school.id">
             {{ school.name }}
           </option>
@@ -52,8 +52,6 @@ export default {
   },
   computed: {
     ...mapState({
-      message: state => state.errorMessage,
-      showNotification: state => state.errorMessage.length > 0,
       schools: state => state.schools
     }),
     isEditing() {
@@ -78,8 +76,14 @@ export default {
           this.addNewService(data);
         }
         this.$parent.close();
+        return;
       }
-      this.sendError("Please complete all fields.");
+      this.$toast.open({
+        duration: 3000,
+        message: "Please complete all fields.",
+        position: "is-top",
+        type: "is-danger"
+      });
     }
   }
 };
